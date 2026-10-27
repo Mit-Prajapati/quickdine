@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRouts.js";
 import restaurantRouter from "./routes/restaurantRoutes.js";
+import bookingRouter from "./routes/bookingRoutes.js";
 
 
 
@@ -25,6 +26,9 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use("/api/auth",authRouter)
 app.use("/api/restaurants",restaurantRouter)
+app.use("/api/bookingd",bookingRouter)
+
+
 
 
 
