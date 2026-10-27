@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { Restaurant } from "../models/Restaurant.js";
 import  Jwt  from "jsonwebtoken";
 import { User } from "../models/user.js";
-import { Booking } from "../models/booking.js";
+import { Booking } from "../models/Booking.js";
 
 export const getRestaurants = async (req:Request,res:Response):Promise<void> => {
     try {
