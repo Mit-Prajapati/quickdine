@@ -27,7 +27,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use("/api/auth",authRouter)
 app.use("/api/restaurants",restaurantRouter)
-app.use("/api/bookingd",bookingRouter)
+app.use("/api/booking",bookingRouter)
 app.use("/api/onwer",onwerRouter)
 
 
