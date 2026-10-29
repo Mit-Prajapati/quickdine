@@ -7,7 +7,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlwares/auth.js";
 import { Restaurant } from "../models/Restaurant.js";
-import { Booking } from "../models/booking.js";
+import { Booking } from "../models/Booking.js";
 
 export const createBooking = async (req:AuthRequest,res:Response):Promise<void> => {
     try {
