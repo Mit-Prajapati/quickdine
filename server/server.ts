@@ -6,6 +6,7 @@ import authRouter from "./routes/authRouts.js";
 import restaurantRouter from "./routes/restaurantRoutes.js";
 import bookingRouter from "./routes/bookingRoutes.js";
 import onwerRouter from "./routes/onwerRoutes.js";
+import adminRouter from "./routes/adminRoutes.js";
 
 
 
@@ -29,6 +30,8 @@ app.use("/api/auth",authRouter)
 app.use("/api/restaurants",restaurantRouter)
 app.use("/api/booking",bookingRouter)
 app.use("/api/onwer",onwerRouter)
+app.use("/api/admin",adminRouter)
+
 
 
 
