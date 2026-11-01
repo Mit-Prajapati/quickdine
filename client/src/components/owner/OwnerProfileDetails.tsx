@@ -94,7 +94,7 @@ export default function OwnerProfileDetails({ restaurant, setRestaurant }: Owner
                 formData.append("image", imageFile);
             }
 
-            const res = await api.put("/onwer/restaurant",formData,{
+            const res = await api.put("/onwer/restaurants",formData,{
                 headers:{
                     "Content-Type" : "multipart/form-data",
                 },

@@ -14,8 +14,8 @@ const UserSchema = new Schema<IUser> (
     {
         name :{type:String , required: true,trim:true},
         email:{type:String , required: true,unique:true,lowercase:true,trim:true},
-        password :{type:String , required: true,unique:true,minlength:8,trim:true},
-        phone :{type:String , required: true,minlength:10,trim:true},
+        password :{type:String , required: true,minlength:8,trim:true},
+        phone :{type:String , minlength:10,trim:true},
         role:{type:String,enum:["user","onwer","admin"],default:"user"},
 
         

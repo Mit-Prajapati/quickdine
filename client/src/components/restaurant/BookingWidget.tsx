@@ -81,14 +81,7 @@ export default function BookingWidget({
                             (() => {
                                 const todayStr = new Date().toISOString().split("T")[0];
                                 const isToday = selectedDate === todayStr;
-                                const allSlots =
-                                    slotsAvailability.length > 0
-                                        ? slotsAvailability
-                                        : (restaurant.availableSlots || []).map((s: string) => ({
-                                              time: s,
-                                              availableSeats: 20,
-                                              isAvailable: true,
-                                          }));
+                                const allSlots = slotsAvailability;
                                 return allSlots.filter((slotInfo: any) => {
                                     if (!isToday) return true;
                                     const [slotHour, slotMinute] = slotInfo.time.split(":").map(Number);

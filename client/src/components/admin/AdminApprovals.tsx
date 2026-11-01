@@ -45,7 +45,7 @@ export default function AdminApprovals({ pendingRestaurants, otherRestaurants, b
                                         </span>
                                     </div>
                                     <p className="text-[10px] text-secondary font-medium tracking-wide uppercase pt-1">
-                                        Owner: {r.owner?.name} ({r.owner?.email})
+                                        Owner: {r.onwer?.name} ({r.onwer?.email})
                                     </p>
                                 </div>
 
@@ -99,7 +99,7 @@ export default function AdminApprovals({ pendingRestaurants, otherRestaurants, b
                                         <td className="p-4">
                                             {r.cuisine} • {r.location}
                                         </td>
-                                        <td className="p-4 text-black/55">{r.owner?.name || "N/A"}</td>
+                                        <td className="p-4 text-black/55">{r.onwer?.name || "N/A"}</td>
                                         <td className="p-4 text-right space-x-3">
                                             <span
                                                 className={`inline-block py-0.5 px-2 text-[9px] font-medium tracking-wider uppercase rounded-sm ${

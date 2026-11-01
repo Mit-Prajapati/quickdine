@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import api from "../lib/api.ts";
 import toast from "react-hot-toast";
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fde275601113eba676e52f741dcc60d1a94ad995
 interface UserType {
     _id: string;
     name: string;
@@ -121,7 +125,11 @@ export const AppContextProvider = ({ children }: Props) => {
                     setUser(res.data)
                 } catch (error:any) {
                     toast.error(error?.response?.data?.message || error?.message )
-                    logout;
+                    if (error?.response?.status === 401) {
+                        localStorage.removeItem("token");
+                        setToken(null);
+                        setUser(null);
+                    }
                 }
             }
             setLoading(false);
