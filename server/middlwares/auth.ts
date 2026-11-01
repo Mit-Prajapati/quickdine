@@ -23,7 +23,7 @@ export const protect = async (req:AuthRequest,res:Response,next:NextFunction):Pr
 
             const user = await User.findById(decoded.id).select(" -password");
             if(!user){
-                res.status(401).json({massage:"Not Aythorized User not found"})
+                res.status(401).json({message:"Not Aythorized User not found"})
                 return;
             }
 
@@ -32,7 +32,7 @@ export const protect = async (req:AuthRequest,res:Response,next:NextFunction):Pr
 
         } catch (error:any) {
             console.error("Auth Mddleware error:", error);
-            res.status(401).json({massage:"Not Aythorized User not found"});
+            res.status(401).json({message:"Not Aythorized User not found"});
             return;
         }
     }

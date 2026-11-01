@@ -22,7 +22,7 @@ export default function Dashboard() {
         const fetchBookings = async () => {
             try {
                 setLoadingBookings(true);
-                const res = await api.get("/bookings/my")
+                const res = await api.get("/booking/my")
                 setBookings(res.data)
             } catch (error:any) {
                 toast.error(error?.response?.data?.message || error?.message);
@@ -41,7 +41,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchRecommendations = async () => {
             try {
-                const res = await api.get(('/restaurant/featured'))
+                const res = await api.get(('/restaurants/featured'))
                 setRecommendations(res.data)
             } catch (error:any) {
                 toast.error(error?.response?.data?.message || error?.message);
@@ -58,7 +58,7 @@ export default function Dashboard() {
         try {
             await api.put(`/booking/${bookingId}/cancel`)
             //update local state
-            setBookings((prev) => prev.map((b) => (b._id=== bookingId ? {...b,status:"cancled"} : b) ))
+            setBookings((prev) => prev.map((b) => (b._id=== bookingId ? {...b,status:"cancelled"} : b) ))
             toast.success("Reservation cancelled successfully.");
         } catch (error: any) {
             toast.error(error?.response?.data?.message || error?.message);
@@ -129,21 +129,21 @@ export default function Dashboard() {
                                             <div className="flex gap-4">
                                                 <div className="w-16 h-16 rounded-sm overflow-hidden shrink-0 bg-surface">
                                                     <img
-                                                        src={b.restaurant?.image}
-                                                        alt={b.restaurant?.name}
+                                                        src={b.restaurants?.image}
+                                                        alt={b.restaurants?.name}
                                                         className="w-full h-full object-cover"
                                                     />
                                                 </div>
                                                 <div className="space-y-1">
                                                     <span className="text-[9px] font-medium text-secondary tracking-widest uppercase">
-                                                        {b.restaurant?.cuisine}
+                                                        {b.restaurants?.cuisine}
                                                     </span>
                                                     <h4 className="font-display text-base font-medium text-primary">
-                                                        {b.restaurant?.name}
+                                                        {b.restaurants?.name}
                                                     </h4>
                                                     <p className="text-xs text-black/55 flex items-center gap-1">
                                                         <MapPinIcon size={12} />
-                                                        {b.restaurant?.location}
+                                                        {b.restaurants?.location}
                                                     </p>
                                                 </div>
                                             </div>
@@ -199,10 +199,10 @@ export default function Dashboard() {
                                                           <tr key={b._id} className="hover:bg-surface/50">
                                                               <td className="p-4 font-medium text-primary">
                                                                   <Link
-                                                                      to={`/restaurant/${b.restaurant?.slug}`}
+                                                                      to={`/restaurant/${b.restaurants?.slug}`}
                                                                       className="hover:text-secondary"
                                                                   >
-                                                                      {b.restaurant?.name}
+                                                                      {b.restaurants?.name}
                                                                   </Link>
                                                               </td>
                                                               <td className="p-4">

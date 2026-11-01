@@ -59,7 +59,7 @@ export default function AdminStats({ stats }: AdminStatsProps) {
                                             <div className="text-[10px] text-black/50">{b.user?.email}</div>
                                         </td>
 
-                                        <td className="p-4 text-primary">{b.restaurant?.name || "Deleted Restaurant"}</td>
+                                        <td className="p-4 text-primary">{b.restaurants?.name || "Deleted Restaurant"}</td>
 
                                         <td className="p-4 text-black/55">
                                             {new Date(b.date).toLocaleDateString()} at {b.time} PM • {b.guests} Guests

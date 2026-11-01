@@ -44,7 +44,7 @@ export const getOwnerRestaurant = async (req:AuthRequest,res:Response):Promise<v
 
 export const createOwnerRestaurant = async (req:AuthRequest,res:Response):Promise<void> => {
     try {
-        const existing = await Restaurant.findOne({owner:req.user?._id})
+        const existing = await Restaurant.findOne({onwer:req.user?._id})
         if(existing){
             res.status(400).json({message:"you  already have a resturant ragistred"});
             return;
@@ -57,7 +57,7 @@ export const createOwnerRestaurant = async (req:AuthRequest,res:Response):Promis
         }
         // ganarate the slug from the name 
 
-        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace()
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g, "")
         
         const slugExists  = await Restaurant.findOne({slug});
         if(slugExists){
@@ -76,7 +76,7 @@ export const createOwnerRestaurant = async (req:AuthRequest,res:Response):Promis
 
 
         const parsedTags = typeof tags === "string"? tags.split(",").map((t) =>t.trim()) : tags  || [];
-        const parsedSlots = typeof availableSlots === "string" ? availableSlots.split(",").map((s) => s.trim()) : availableSlots  || ["17:00","18;00","19:00","20:00","21:00"];
+        const parsedSlots = typeof availableSlots === "string" ? availableSlots.split(",").map((s) => s.trim()) : availableSlots  || ["17:00","18:00","19:00","20:00","21:00"];
         const restaurant = await Restaurant.create({
             name,
             slug,
@@ -118,6 +118,7 @@ export const updateOwnerRestaurant = async (req:AuthRequest,res:Response):Promis
         if(name) restaurant.name = name;
         if(description) restaurant.description =description;
         if(cuisine) restaurant.cuisine =cuisine;
+        if(priceRange) restaurant.priceRange = priceRange;
         if(location) restaurant.location = location;
         if(address) restaurant.address = address;
         if(chef) restaurant.chef= chef;
@@ -167,7 +168,7 @@ export const getOnwerBookings = async (req:AuthRequest,res:Response):Promise<voi
         }
 
 
-        const bookings = await Booking.find({restaurant:restaurant._id}).populate("user","name email phone").sort({date: -1 , time: -1})
+        const bookings = await Booking.find({restaurants:restaurant._id}).populate("user","name email phone").sort({date: -1 , time: -1})
         res.json(bookings);
         
     } catch (error:any) {
@@ -185,8 +186,8 @@ export const getOnwerBookings = async (req:AuthRequest,res:Response):Promise<voi
 export const updateBookingStatus = async (req:AuthRequest,res:Response):Promise<void> => {
     try {
         const {status} = req.body;
-        if(!status || !["confirmed" , "canclled","completed"].includes(status)){
-            res.status(400).json({messsage : "plese enter a valid booking status"});
+        if(!status || !["confirmed" , "cancelled","completed"].includes(status)){
+            res.status(400).json({message : "plese enter a valid booking status"});
             return;
         }
 

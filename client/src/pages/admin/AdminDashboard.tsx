@@ -23,7 +23,7 @@ export default function AdminDashboard() {
     const fetchAdminData = async () => {
        try {
             setLoading(true);
-            const rRes= await api.get("/admin/restuarants")
+            const rRes= await api.get("/admin/restaurants")
             setRestaurants(rRes.data)
 
             const sRes = await api.get("/admin/stats")
@@ -38,12 +38,12 @@ export default function AdminDashboard() {
     const handleApproveStatus = async (restaurantId: string, status: "approved" | "rejected") => {
         try {
             setBtnLoading(restaurantId);
-            await api.put(`/admin/restuarants/${restaurantId}/approve`,{status})
+            await api.put(`/admin/restaurants/${restaurantId}/approve`,{status})
             toast.success(`Rstuaarants has been marked as ${status.toUpperCase()}`)
 
             // reload local list and stats 
 
-            const rRes = await api.get("/admin/restuarant")
+            const rRes = await api.get("/admin/restaurants")
             setRestaurants(rRes.data)
 
             const sRes = await api.get("/admin/stats")

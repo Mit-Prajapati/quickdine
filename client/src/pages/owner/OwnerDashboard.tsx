@@ -23,9 +23,9 @@ export default function OwnerDashboard() {
     const fetchOwnerData = async () => {
         try {
             setLoading(true);
-            const res = await api.get("/onwer/restaurant")
+            const res = await api.get("/onwer/restaurants")
             setRestaurant(res.data)
-            if(res.data.status == "approved"){
+            if(res.data?.status == "approved"){
                 // Fatch bookings
 
                 const bookingRes = await api.get("/onwer/bookings")
