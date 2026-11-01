@@ -4,8 +4,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const api = axios.create({ baseURL: import.meta.env.VITE_API_URL });
-
 interface UserType {
     _id: string;
     name: string;
@@ -33,6 +31,8 @@ interface Props {
 }
 
 export const AppContextProvider = ({ children }: Props) => {
+    const api = axios.create({ baseURL: import.meta.env.VITE_API_URL });
+
     const [user, setUser] = useState<UserType | null>(null);
     const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
     const [loading, setLoading] = useState<boolean>(true);
