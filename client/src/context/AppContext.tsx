@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
-import api from "../lib/api.ts";
+
 import toast from "react-hot-toast";
+import axios from "axios";
 
-<<<<<<< HEAD
-=======
+// <<<<<<< HEAD
+// =======
 
->>>>>>> fde275601113eba676e52f741dcc60d1a94ad995
+// >>>>>>> fde275601113eba676e52f741dcc60d1a94ad995
 interface UserType {
     _id: string;
     name: string;
