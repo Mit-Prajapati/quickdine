@@ -9,7 +9,7 @@ import { Booking } from "../models/Booking.js";
 
 export const getRestaurants = async (req:Request,res:Response):Promise<void> => {
     try {
-        const {search,priceRange,rating,location,sort} = req.query;
+        const {search,priceRange,rating,location,sort,cuisine} = req.query;
 
         // Build Quary Object 
         const queryObj:any = {status:"approved"};
@@ -17,9 +17,15 @@ export const getRestaurants = async (req:Request,res:Response):Promise<void> => 
             queryObj.$or = [
                 {name:{$regex:search,$options : "i"}},
                 {tags:{$regex:search,$options : "i"}},
+                {cuisine:{$regex:search,$options : "i"}},
                 {location:{$regex:search,$options : "i"}},
 
             ]
+        }
+
+        if(cuisine){
+            const cuisines = Array.isArray(cuisine) ? cuisine : [cuisine];
+            queryObj.$and = [{$or: [{cuisine: {$in: cuisines}}, {tags: {$in: cuisines}}]}];
         }
 
         if(priceRange){
@@ -28,7 +34,7 @@ export const getRestaurants = async (req:Request,res:Response):Promise<void> => 
         }
 
         if(rating){
-           queryObj.ragister = {$gte :parseFloat( rating as string)};
+           queryObj.rating = {$gte :parseFloat( rating as string)};
         }
 
          if(location){
@@ -154,7 +160,7 @@ export const getRestaurantAvailability = async (req:Request,res:Response):Promis
 
             return{
                 time:slot,
-                availableSeates,
+                availableSeats: availableSeates,
                 isAvailable:availableSeates >0 
             }
         })

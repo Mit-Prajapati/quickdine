@@ -34,7 +34,7 @@ export default function RestaurantDetail() {
         const fetchRestaurant = async () => {
             try {
                 setLoading(true);
-                const res = await api.get(`/restaurant/${slug}`)
+                const res = await api.get(`/restaurants/${slug}`)
                 setRestaurant(res.data)  
                 // Initilize The Bookings Values 
                 
@@ -54,6 +54,7 @@ export default function RestaurantDetail() {
     }, [slug, navigate]);
 
     useEffect(() => {
+        let active = true;
         const fetchAvailability = async () => {
             if(!restaurant?._id || !selectedDate){
                 return;
@@ -61,16 +62,19 @@ export default function RestaurantDetail() {
 
             try {
                 setLoadingSlots(true);
-                const res = await api.get(`/restuarant/${restaurant._id}/availability?date=${selectedDate}`)
-                setSlotsAvailability(res.data)
+                setSlotsAvailability([]);
+                setSelectedSlot("");
+                const res = await api.get(`/restaurants/${restaurant._id}/availability?date=${selectedDate}`)
+                if (active) setSlotsAvailability(res.data)
             } catch (error:any) {
-                console.error(error);
+                if (active) toast.error(error?.response?.data?.message || "Could not load availability");
                 
             }finally{
-                setLoadingSlots(false)
+                if (active) setLoadingSlots(false)
             }
         };
         fetchAvailability();
+        return () => { active = false; };
     }, [restaurant?._id, selectedDate]);
 
     if (loading) {
@@ -80,7 +84,7 @@ export default function RestaurantDetail() {
     if (!restaurant) return null;
 
     const handleReserveClick = () => {
-        if (!selectedSlot) {
+        if (!selectedSlot || !slotsAvailability.some((slot) => slot.time === selectedSlot && slot.isAvailable && slot.availableSeats >= Number(selectedGuests))) {
             toast.error("Please select a dining time slot.");
             return;
         }

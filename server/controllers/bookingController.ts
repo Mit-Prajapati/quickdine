@@ -18,6 +18,13 @@ export const createBooking = async (req:AuthRequest,res:Response):Promise<void> 
             return;
         }
 
+        const requestedGuests = Number(guests);
+        const bookingDate = new Date(date);
+        if (!Number.isInteger(requestedGuests) || requestedGuests < 1 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(bookingDate.getTime()) || bookingDate.toISOString().slice(0, 10) !== date || date < new Date().toISOString().slice(0, 10)) {
+            res.status(400).json({message: "Please provide a valid date and party size"});
+            return;
+        }
+
         // check if the restarant exist 
 
         const resturant = await Restaurant.findById(restaurantId)
@@ -32,10 +39,15 @@ export const createBooking = async (req:AuthRequest,res:Response):Promise<void> 
             return;
         }
 
+        if (!resturant.availableSlots.includes(time)) {
+            res.status(400).json({message: "Please select an available time slot"});
+            return;
+        }
+
         // verify seat availibilty 
         const requestedguest= Number(guests);
         const existingBookings = await Booking.find({
-            resturant :restaurantId,
+            restaurants :restaurantId,
             date :new Date(date),
             time,
             status:"confirmed",
@@ -49,6 +61,7 @@ export const createBooking = async (req:AuthRequest,res:Response):Promise<void> 
             res.status(400).json({
                 message: `Unable to reverse . Only ${availableSeates} seats are available for this time slot`,
             })
+            return;
         }
 
         // create booking.
@@ -67,13 +80,13 @@ export const createBooking = async (req:AuthRequest,res:Response):Promise<void> 
 
         // Populate resturant info before returning 
 
-        const populatedBooking = await booking.populate("restaurant","name location image address");
+        const populatedBooking = await booking.populate("restaurants","name location image address");
 
-        res.status(201).json({populatedBooking});
+        res.status(201).json(populatedBooking);
 
     } catch (error:any) {
         console.error(error);
-        res.status(400).json({message: error.massage});
+        res.status(400).json({message: error.message});
     }
 }
 
@@ -84,11 +97,11 @@ export const createBooking = async (req:AuthRequest,res:Response):Promise<void> 
 
 export const getMyBookings = async (req:AuthRequest,res:Response):Promise<void> => {
     try {
-        const  bookings = await Booking.find({user:req.user?._id}).populate ("restaurant","name location image address slug").sort({date:-1,time:-1})
+        const  bookings = await Booking.find({user:req.user?._id}).populate ("restaurants","name location image address slug cuisine").sort({date:-1,time:-1})
         res.json(bookings);
     } catch (error:any) {
         console.error(error);
-        res.status(400).json({message: error.massage});
+        res.status(400).json({message: error.message});
     }
 }
 
@@ -115,10 +128,10 @@ export const cancelBookings = async (req:AuthRequest,res:Response):Promise<void>
         booking.status = "cancelled";
         await booking.save();
 
-        const populatedBooking = await booking.populate("restuarant"," name  location image address")
+        const populatedBooking = await booking.populate("restaurants"," name  location image address")
         res.json(populatedBooking);
     } catch (error:any) {
         console.error(error);
-        res.status(400).json({message: error.massage});
+        res.status(400).json({message: error.message});
     }
 }

@@ -29,7 +29,7 @@ export const getAllRestaurants = async (req:AuthRequest,res:Response):Promise<vo
 
 export const approveRestaurants = async (req:AuthRequest,res:Response):Promise<void> =>{
     try {
-        const status = req.body;
+        const { status } = req.body;
         if(!status || !["approved","rejected","pending"].includes(status)){
             res.status(400).json({message:"Plese provide a valid approval status"});
             return;
@@ -63,16 +63,16 @@ export const getAdminStats = async (req:AuthRequest,res:Response):Promise<void> 
         const totalRestaurants = await Restaurant.countDocuments({})
          
         // Get latest 10 bookings
-        const  latestBookings = await Booking.find({}).populate("user","name email").populate("restaurant","name").sort({createdAt : -1}).limit(10)
+        const  latestBookings = await Booking.find({}).populate("user","name email").populate("restaurants","name").sort({createdAt : -1}).limit(10)
 
         res.json({
             users:{
                 totalUsers,
-                totalOnwers,
+                totalOwners: totalOnwers,
                 total : totalOnwers + totalUsers,
             },
-            restaurant:{
-            total : totalBookings,
+            restaurants:{
+            total : totalRestaurants,
             },
             bookings: {
                 total: totalBookings,

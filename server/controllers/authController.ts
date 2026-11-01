@@ -16,16 +16,16 @@ const ganarateToken=(id: string)=>{
 export const ragisterUser = async (req:Request,res : Response):Promise<void> => {
     try {
         const{name,email,password,phone,role}   = req.body  ;
-        if(!name || !email || !password){
-            res.status(400).json({massage :" plese enter the details"})
+        if(!name || !email || !password || typeof password !== "string" || password.length < 8){
+            res.status(400).json({message :" plese enter the details"})
             return ;
         }
 
         // check if the user exsist 
 
-        const userExists = await User.findOne({email})
+        const userExists = await User.findOne({email: String(email).trim().toLowerCase()})
         if(userExists){
-             res.status(400).json({massage :" plese enter the details"})
+             res.status(400).json({message :" plese enter the details"})
             return ;
         }
 
@@ -42,7 +42,7 @@ export const ragisterUser = async (req:Request,res : Response):Promise<void> => 
             email,
             password: hashpassword,
             phone,
-            role,
+            role: role === "owner" || role === "onwer" ? "onwer" : "user",
         })
         if(user){
             res.status(201).json({
@@ -50,12 +50,12 @@ export const ragisterUser = async (req:Request,res : Response):Promise<void> => 
                 name : user.name,
                 email : user.email,
                 phone : user.phone,
-                role : user.role,
+                role : user.role === "onwer" ? "owner" : user.role,
                 token:ganarateToken(user._id.toString())
             })
         }
         else{
-            res.status(400).json({massage :"Invalid User data"})
+            res.status(400).json({message :"Invalid User data"})
         }
 
 
@@ -63,7 +63,7 @@ export const ragisterUser = async (req:Request,res : Response):Promise<void> => 
 
     } catch (error : any) { 
         console.error(error);
-        res.status(400).json({massage:error.massage});
+        res.status(400).json({message:error.message});
         
     }
 }
@@ -76,22 +76,22 @@ export const loginUser = async (req:Request,res : Response):Promise<void> => {
 
         const{email,password}   = req.body  ;
         if( !email || !password){
-            res.status(400).json({massage :" plese provide valid email and password"})
+            res.status(400).json({message :" plese provide valid email and password"})
             return ;
         }
 
         // check for user
 
-        const user = await User.findOne({email})
+        const user = await User.findOne({email: String(email).trim().toLowerCase()})
         if(!user){
-            res.status(401).json({massage :"invalid email or password"});
+            res.status(401).json({message :"invalid email or password"});
             return ;
         }
 
         const isMatch= await bcrypt.compare(password,user.password || " ")
 
         if(!isMatch){
-            res.status(401).json({massage:"Invalid email or password"});
+            res.status(401).json({message:"Invalid email or password"});
             return;
         }
 
@@ -101,7 +101,7 @@ export const loginUser = async (req:Request,res : Response):Promise<void> => {
                 name : user.name,
                 email : user.email,
                 phone : user.phone,
-                role : user.role,
+                role : user.role === "onwer" ? "owner" : user.role,
                 token:ganarateToken(user._id.toString())
             })
 
@@ -111,7 +111,7 @@ export const loginUser = async (req:Request,res : Response):Promise<void> => {
         
     } catch (error:any) {
        console.error(error);
-        res.status(400).json({massage:error.massage});
+        res.status(400).json({message:error.message});
     }
 }
 
@@ -130,7 +130,7 @@ export const getMe = async (req:AuthRequest,res : Response):Promise<void> => {
             return;
         }
 
-        res.json(req.user);
+        res.json({...req.user.toJSON(), role: req.user.role === "onwer" ? "owner" : req.user.role});
         
     } catch (error:any) {
         console.error(error);
