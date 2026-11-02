@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 import toast from "react-hot-toast";
-import axios from "axios";
+import api from "../lib/api";
 
 // <<<<<<< HEAD
 // =======
@@ -36,7 +36,6 @@ interface Props {
 }
 
 export const AppContextProvider = ({ children }: Props) => {
-    const api = axios.create({ baseURL: import.meta.env.VITE_API_URL });
 
     const [user, setUser] = useState<UserType | null>(null);
     const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
